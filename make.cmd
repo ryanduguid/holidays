@@ -1,5 +1,6 @@
 @Echo Off
 SetLocal EnableDelayedExpansion
+Set "ERRORLEVEL="
 
 Set Target=%~1
 
@@ -13,7 +14,10 @@ Set "UV_RUN_CMD=!UV! run --no-sync"
 Set Targets=
 For /F "Delims=:" %%I in ('FindStr /R "^:" "%~f0"') Do Set Targets=!Targets! %%I
 For %%A in (!Targets!) Do (
-    If /I "%Target%"=="%%A" Call :%%A & Exit /B
+    If /I "%Target%"=="%%A" (
+        Call :%%A
+        Exit /B !ErrorLevel!
+    )
 )
 GoTo :Help
 
@@ -23,8 +27,11 @@ GoTo :Help
 
 :Check
     Call :L10n
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     Call :Pre-commit
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     Call :Doc
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     Call :Test
     Exit /B
 
@@ -67,16 +74,19 @@ GoTo :Help
 
 :Icalendar
     %UV_RUN_CMD% scripts\l10n\generate_mo_files.py
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV_RUN_CMD% scripts\generate_site_assets.py
     Exit /B
 
 :L10n
     %UV_RUN_CMD% scripts\l10n\generate_po_files.py 2>nul >nul
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV_RUN_CMD% scripts\l10n\generate_mo_files.py
     Exit /B
 
 :Package
     %UV_RUN_CMD% scripts\l10n\generate_mo_files.py
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV% build
     Exit /B
 
@@ -133,30 +143,38 @@ GoTo :Help
     )
     Rem Bootstrap with PATH uv, then switch to the lockfile-pinned uv in .venv.
     uv venv --clear --python 3.14
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     uv sync --frozen --only-group ci --no-install-project
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     Set "UV=.venv\Scripts\uv.exe"
     Set "UV_RUN_CMD=!UV! run --no-sync"
     !UV! sync --all-groups
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     !UV_RUN_CMD! pre-commit install --hook-type pre-commit
-    If ErrorLevel 1 Echo warning: could not install pre-commit hooks (check git core.hooksPath) 1>&2
+    If Not "!ErrorLevel!"=="0" Echo warning: could not install pre-commit hooks (check git core.hooksPath) 1>&2
     !UV_RUN_CMD! pre-commit install --hook-type pre-push
-    If ErrorLevel 1 Echo warning: could not install pre-push hooks (check git core.hooksPath) 1>&2
+    If Not "!ErrorLevel!"=="0" Echo warning: could not install pre-push hooks (check git core.hooksPath) 1>&2
     Call :L10n
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     Call :Package
     Exit /B
 
 :Snapshot
     %UV_RUN_CMD% scripts\l10n\generate_mo_files.py
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV_RUN_CMD% scripts\generate_snapshots.py
     Exit /B
 
 :Test
     %UV_RUN_CMD% scripts\l10n\generate_mo_files.py
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV_RUN_CMD% pytest --cov=. --cov-config=pyproject.toml --cov-report term-missing --cov-report xml --durations 10 --durations-min=0.75 --dist loadscope --no-cov-on-fail --numprocesses auto
     Exit /B
 
 :Upgrade
     %UV_RUN_CMD% pre-commit autoupdate
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV% lock --upgrade
+    If Not "!ErrorLevel!"=="0" Exit /B !ErrorLevel!
     %UV% sync --all-groups
     Exit /B
