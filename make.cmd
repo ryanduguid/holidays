@@ -1,5 +1,6 @@
 @Echo Off
 SetLocal EnableDelayedExpansion
+Set "ERRORLEVEL="
 
 Set Target=%~1
 
