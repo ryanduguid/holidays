@@ -1,5 +1,10 @@
 # Holidays
 
+Fork status:
+
+[![Fork code quality](https://app.codacy.com/project/badge/Grade/0356eaa04135452b9f0232fef586e727?branch=dev)](https://app.codacy.com/gh/ryanduguid/holidays/dashboard)
+[![Fork CI](https://github.com/ryanduguid/holidays/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ryanduguid/holidays/actions/workflows/ci.yml)
+
 A fast, efficient Python library for generating country- and subdivision- (e.g. state or province)
 specific sets of government-designated holidays on the fly. It aims to make determining whether a
 specific date is a holiday as fast and flexible as possible.
