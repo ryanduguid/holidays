@@ -1,6 +1,6 @@
 # Holidays
 
-**Fork status**
+Fork status:
 
 [![Fork code quality](https://app.codacy.com/project/badge/Grade/0356eaa04135452b9f0232fef586e727?branch=dev)](https://app.codacy.com/gh/ryanduguid/holidays/dashboard)
 [![Fork CI](https://github.com/ryanduguid/holidays/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/ryanduguid/holidays/actions/workflows/ci.yml)
