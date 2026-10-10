@@ -49,6 +49,16 @@ specific date is a holiday as fast and flexible as possible.
   </tr>
 </table>
 
+On this page:
+
+- [Install](#install)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [ICS Exports](#ics-exports)
+- [Available Countries](#available-countries)
+- [Available Financial Markets](#available-financial-markets)
+- [Contributions](#contributions)
+
 ## Install
 
 The latest stable version can always be installed or updated via pip:
